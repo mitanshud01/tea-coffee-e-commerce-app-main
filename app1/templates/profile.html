@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <title>Profile</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="//fonts.googleapis.com/css?family=Nunito:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #212529;
+            --darker-bg: #1a1e21;
+            --text-color: #f8f9fa;
+            --accent-color: #6c757d;
+            --hover-color: #adb5bd;
+        }
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            scroll-behavior: smooth;
+        }
+        .navbar {
+            background-color: var(--darker-bg) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--hover-color);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .profile-container {
+            background-color: var(--darker-bg);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin: 30px auto;
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .profile-container.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .table {
+            color: var(--text-color);
+        }
+        .table th {
+            border-bottom: 2px solid var(--accent-color);
+        }
+        .table td, .table th {
+            border-top: 1px solid #495057;
+        }
+        footer {
+            background-color: var(--darker-bg);
+            color: var(--text-color);
+            padding: 20px 0;
+            margin-top: auto;
+            transition: all 0.3s ease;
+        }
+        .social-icons a {
+            color: var(--text-color);
+            margin: 0 10px;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        .social-icons a:hover {
+            color: var(--hover-color);
+            transform: translateY(-3px);
+        }
+        img {
+            max-width: 100px;
+            height: auto;
+            transition: all 0.3s ease;
+        }
+        img:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'index' %}">Tea'n'Coffee</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'productall' %}">Products</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'myorder' %}">My Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout1' %}">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container py-5">
+        <div class="profile-container" id="profileContent">
+            <h1 class="mb-4 animate__animated animate__fadeIn">User Profile</h1>
+            <div class="mb-4 animate__animated animate__fadeInLeft">
+                <p><strong>Username:</strong> {{ profile.name }}</p>
+                <p><strong>Email:</strong> {{ profile.email }}</p>
+                <p><strong>Contact:</strong> {{ profile.phone }}</p>
+            </div>
+            
+            <h2 class="mb-3 animate__animated animate__fadeIn">Orders Placed</h2>
+            {% if orders %}
+            <div class="table-responsive animate__animated animate__fadeInUp">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td><img src="{{ order.img.url }}"></td>
+                            <td>{{ order.name }}</td>
+                            <td>{{ order.productqty }}</td>
+                            <td>₹{{ order.orderAmount }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="animate__animated animate__fadeIn">No orders found.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5>Tea'n'Coffee</h5>
+                    <p>Your favorite beverage shop</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Contact Us</h5>
+                    <p><i class="fas fa-map-marker-alt me-2"></i>157, Park Avenue, Ahmedabad</p>
+                    <p><i class="fas fa-phone me-2"></i> +91 9408103579</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Follow Us</h5>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr style="border-color: #6c757d;">
+            <p class="mb-0">&copy; 2025 Tea'n'Coffee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Animation trigger
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileContent = document.getElementById('profileContent');
+            setTimeout(() => {
+                profileContent.classList.add('animate');
+            }, 100);
+
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        window.scrollTo({
+                            top: target.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Navbar scroll effect
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.style.padding = '10px 0';
+                    navbar.style.boxShadow = '0 2px 15px rgba(0,0,0,0.4)';
+                } else {
+                    navbar.style.padding = '15px 0';
+                    navbar.style.boxShadow = '0 2px 10px rgba(0,0,0,0.3)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
